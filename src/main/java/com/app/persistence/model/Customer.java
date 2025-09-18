@@ -14,11 +14,16 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer extends Person {
-    @Column(unique = true)
+    @Column(name = "customer_id", unique = true)
     private UUID customerId;
 
     private String password;
 
     @Enumerated(EnumType.STRING)
     private EStatus status;
+
+    @PrePersist
+    public void init() {
+        this.customerId = UUID.randomUUID();
+    }
 }

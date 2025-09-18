@@ -1,3 +1,6 @@
 package com.app.presentation.dto;
 
-public record ResponseDTO<T>(int status, String message, T data) { }
+import lombok.Builder;
+
+@Builder
+public record ResponseDTO(int status, String message, Object data) { }

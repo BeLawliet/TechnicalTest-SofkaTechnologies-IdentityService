@@ -7,36 +7,69 @@ import com.app.presentation.dto.UpdateCustomerDTO;
 import com.app.service.ICustomerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "api/v1/customer")
+@RequestMapping(path = "api/v1/customers")
 @RequiredArgsConstructor
 public class CustomerController {
     private final ICustomerService customerService;
 
     @GetMapping
-    public ResponseEntity<ResponseDTO<List<CustomerDTO>>> findAllRegisters() {
-        ResponseDTO<List<CustomerDTO>> response = this.customerService.findAll();
+    public ResponseEntity<ResponseDTO> findAllRegisters() {
+        List<CustomerDTO> registers = this.customerService.findAll();
+
+        ResponseDTO response = ResponseDTO.builder()
+                                          .status(HttpStatus.OK.value())
+                                          .message("Se cargaron todos los clientes")
+                                          .data(registers)
+                                          .build();
+
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDTO<CustomerDTO>> saveRegister(@Valid @RequestBody SaveCustomerDTO request) {
-        ResponseDTO<CustomerDTO> response = this.customerService.save(request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ResponseDTO> saveRegister(@Valid @RequestBody SaveCustomerDTO request) {
+        CustomerDTO register = this.customerService.save(request);
+
+        ResponseDTO response = ResponseDTO.builder()
+                                          .status(HttpStatus.OK.value())
+                                          .message("Cliente guardado correctamente")
+                                          .data(register)
+                                          .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping(path = "{identification}")
-    public ResponseEntity<ResponseDTO<CustomerDTO>> updateRegister(@PathVariable Long identification, @Valid @RequestBody UpdateCustomerDTO request) {
-        ResponseDTO<CustomerDTO> response = this.customerService.update(identification, request);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<ResponseDTO> updateRegister(@PathVariable Long identification, @Valid @RequestBody UpdateCustomerDTO request) {
+        Optional<CustomerDTO> register = this.customerService.update(identification, request);
+
+        return register.map(value -> ResponseEntity.ok(ResponseDTO.builder()
+                                                                               .status(HttpStatus.OK.value())
+                                                                               .message("Cliente actualizado correctamente")
+                                                                               .data(value)
+                                                                               .build()
+                                                                   )
+                        )
+                        .orElseGet(() -> ResponseEntity.badRequest().body(ResponseDTO.builder()
+                                                                                     .status(HttpStatus.BAD_REQUEST.value())
+                                                                                     .message(String.format("La identificación %s no esta registrada", identification))
+                                                                                     .data(null)
+                                                                                     .build()
+                        ));
     }
 
     @DeleteMapping(path = "{identification}")
-    public ResponseEntity<ResponseDTO<String>> deleteRegister(@PathVariable Long identification) {
-        return ResponseEntity.ok(this.customerService.delete(identification));
+    public ResponseEntity<String> deleteRegister(@PathVariable Long identification) {
+        boolean wasDeleted = this.customerService.delete(identification);
+
+        if (!wasDeleted) return ResponseEntity.badRequest().body(String.format("La identificación %s no esta registrada", identification));
+
+        return ResponseEntity.ok("Cliente eliminado correctamente");
     }
 }

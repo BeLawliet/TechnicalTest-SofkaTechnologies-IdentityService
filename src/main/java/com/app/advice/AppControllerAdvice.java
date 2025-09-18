@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class AppControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ResponseDTO<Map<String, String>>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ResponseDTO> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = ex.getBindingResult()
                                         .getFieldErrors().stream()
                                                          .collect(Collectors.toMap(
@@ -22,7 +22,11 @@ public class AppControllerAdvice {
                                                                 (existing, replacement) -> existing
                                                          ));
 
-        ResponseDTO<Map<String, String>> response = new ResponseDTO<>(HttpStatus.BAD_REQUEST.value(), "Error de validación", errors);
+        ResponseDTO response = ResponseDTO.builder()
+                                          .status(HttpStatus.BAD_REQUEST.value())
+                                          .message("Error de validación")
+                                          .data(errors)
+                                          .build();
 
         return ResponseEntity.badRequest().body(response);
     }
