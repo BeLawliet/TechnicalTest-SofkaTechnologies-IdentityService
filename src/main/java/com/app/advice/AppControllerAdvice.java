@@ -30,4 +30,14 @@ public class AppControllerAdvice {
 
         return ResponseEntity.badRequest().body(response);
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ResponseDTO> handleException(Exception ex) {
+        ResponseDTO response = ResponseDTO.builder()
+                                          .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                                          .message("Ocurrió un error inesperado, contacte al administrador")
+                                          .build();
+
+        return ResponseEntity.internalServerError().body(response);
+    }
 }

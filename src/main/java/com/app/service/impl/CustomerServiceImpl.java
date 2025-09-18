@@ -23,7 +23,7 @@ public class CustomerServiceImpl implements ICustomerService {
         List<Customer> customers = this.customerRepository.findAll();
 
         return customers.stream()
-                        .map(element -> this.modelMapper.map(element, CustomerDTO.class))
+                        .map(customer -> this.modelMapper.map(customer, CustomerDTO.class))
                         .toList();
     }
 
