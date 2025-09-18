@@ -1,0 +1,10 @@
+INSERT INTO customers (identification, name, gender, age, address, phone, customer_id, password, status) VALUES (1001, 'Andrés Suárez', 'MALE', 30, 'Calle 123', '300111111', RANDOM_UUID(), 'secret1', 'ACTIVE');
+INSERT INTO customers (identification, name, gender, age, address, phone, customer_id, password, status) VALUES (1002, 'Ana Pérez', 'FEMALE', 28, 'Carrera 45', '300222222', RANDOM_UUID(), 'secret2', 'INACTIVE');
+INSERT INTO customers (identification, name, gender, age, address, phone, customer_id, password, status) VALUES (1003, 'Carlos Gómez', 'MALE', 35, 'Avenida 10', '300333333', RANDOM_UUID(), 'secret3', 'ACTIVE');
+INSERT INTO customers (identification, name, gender, age, address, phone, customer_id, password, status) VALUES (1004, 'Laura Rodríguez', 'FEMALE', 26, 'Calle 8', '300444444', RANDOM_UUID(), 'secret4', 'ACTIVE');
+INSERT INTO customers (identification, name, gender, age, address, phone, customer_id, password, status) VALUES (1005, 'Andrés Martínez', 'MALE', 40, 'Carrera 12', '300555555', RANDOM_UUID(), 'secret5', 'INACTIVE');
+INSERT INTO customers (identification, name, gender, age, address, phone, customer_id, password, status) VALUES (1006, 'María Fernández', 'FEMALE', 32, 'Diagonal 20', '300666666', RANDOM_UUID(), 'secret6', 'ACTIVE');
+INSERT INTO customers (identification, name, gender, age, address, phone, customer_id, password, status) VALUES (1007, 'Jorge Ramírez', 'MALE', 29, 'Transversal 9', '300777777', RANDOM_UUID(), 'secret7', 'ACTIVE');
+INSERT INTO customers (identification, name, gender, age, address, phone, customer_id, password, status) VALUES (1008, 'Sofía Herrera', 'FEMALE', 27, 'Calle 15', '300888888', RANDOM_UUID(), 'secret8', 'INACTIVE');
+INSERT INTO customers (identification, name, gender, age, address, phone, customer_id, password, status) VALUES (1009, 'Felipe Torres', 'MALE', 33, 'Carrera 7', '300999999', RANDOM_UUID(), 'secret9', 'ACTIVE');
+INSERT INTO customers (identification, name, gender, age, address, phone, customer_id, password, status) VALUES (1010, 'Paula Castro', 'FEMALE', 31, 'Avenida 68', '300101010', RANDOM_UUID(), 'secret10', 'ACTIVE');

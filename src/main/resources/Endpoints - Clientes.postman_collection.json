@@ -1,0 +1,55 @@
+{
+	"info": {
+		"_postman_id": "6a00a33d-307d-4ca5-9b6f-68acefde8d3a",
+		"name": "Endpoints - Clientes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31768025"
+	},
+	"item": [
+		{
+			"name": "Listar - Clientes",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BACKEND_LOCAL_URL}}/customer",
+					"host": [
+						"{{BACKEND_LOCAL_URL}}"
+					],
+					"path": [
+						"customer"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BACKEND_LOCAL_URL",
+			"value": ""
+		}
+	]
+}
