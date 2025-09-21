@@ -3,7 +3,9 @@ package com.app.presentation.dto;
 import com.app.persistence.model.EGender;
 import com.app.persistence.model.EStatus;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 
+@Builder
 public record SaveCustomerDTO(
         @NotNull(message = "La identificación es obligatoria")
         @Positive(message = "La identificación debe ser un número positivo")
