@@ -3,7 +3,9 @@ package com.app.presentation.dto;
 import com.app.persistence.model.EGender;
 import com.app.persistence.model.EStatus;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 
+@Builder
 public record UpdateCustomerDTO(
         @NotBlank(message = "El nombre es obligatorio")
         String name,

@@ -1,13 +1,18 @@
 package com.app.service.impl;
 
 import com.app.persistence.model.Customer;
+import com.app.persistence.model.EStatus;
+import com.app.presentation.dto.ETypeEventDTO;
 import com.app.persistence.repository.ICustomerRepository;
 import com.app.presentation.dto.CustomerDTO;
+import com.app.presentation.dto.CustomerEventDTO;
 import com.app.presentation.dto.SaveCustomerDTO;
 import com.app.presentation.dto.UpdateCustomerDTO;
 import com.app.service.ICustomerService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +20,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CustomerServiceImpl implements ICustomerService {
+    @Value("${kafka-topic}")
+    private String KAFKA_TOPIC;
+
     private final ICustomerRepository customerRepository;
+    private final KafkaTemplate<String, CustomerEventDTO> kafkaTemplate;
     private final ModelMapper modelMapper;
 
     @Override
@@ -33,6 +42,8 @@ public class CustomerServiceImpl implements ICustomerService {
 
         Customer customerSaved = this.customerRepository.save(newCustomer);
 
+        this.publishKafkaEvent(ETypeEventDTO.CUSTOMER_CREATED, request.accountType(), customerSaved);
+
         return this.modelMapper.map(customerSaved, CustomerDTO.class);
     }
 
@@ -44,6 +55,8 @@ public class CustomerServiceImpl implements ICustomerService {
 
                                           Customer updatedCustomer = this.customerRepository.save(customer);
 
+                                          this.publishKafkaEvent(ETypeEventDTO.CUSTOMER_UPDATED, null, updatedCustomer);
+
                                           return this.modelMapper.map(updatedCustomer, CustomerDTO.class);
                                       });
     }
@@ -52,9 +65,24 @@ public class CustomerServiceImpl implements ICustomerService {
     public boolean delete(Long identification) {
         return this.customerRepository.findById(identification)
                                       .map(customer -> {
-                                            this.customerRepository.delete(customer);
+                                            customer.setStatus(EStatus.INACTIVE);
+                                            Customer updatedCustomer = this.customerRepository.save(customer);
+
+                                            this.publishKafkaEvent(ETypeEventDTO.CUSTOMER_UPDATED, null, updatedCustomer);
+
                                             return true;
                                       })
                                       .orElse(false);
+    }
+
+    private void publishKafkaEvent(ETypeEventDTO typeEvent, String accountType, Customer model) {
+        CustomerEventDTO customerEventDTO = CustomerEventDTO.builder()
+                                                            .typeEvent(typeEvent)
+                                                            .customerId(model.getCustomerId())
+                                                            .accountType(accountType)
+                                                            .status(model.getStatus())
+                                                            .build();
+
+        this.kafkaTemplate.send(KAFKA_TOPIC, customerEventDTO);
     }
 }
