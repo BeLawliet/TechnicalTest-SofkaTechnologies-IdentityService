@@ -27,6 +27,9 @@ public record SaveCustomerDTO(
         @NotNull(message = "El teléfono es obligatorio")
         String phone,
 
+        @NotBlank(message = "El tipo de cuenta es obligatorio")
+        String accountType,
+
         @NotBlank(message = "La contraseña es obligatoria")
         String password,
 

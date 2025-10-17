@@ -23,6 +23,6 @@ public class Customer extends Person {
 
     @PrePersist
     public void init() {
-        this.customerId = UUID.randomUUID();
+        if (this.customerId == null) this.customerId = UUID.randomUUID();
     }
 }
